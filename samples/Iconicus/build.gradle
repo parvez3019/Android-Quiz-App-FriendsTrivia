@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':facebook')
+    // In order to test a specific version published on maven, comment out the project compile
+    // directive and and comment this line and update to the specific version.
+    // compile 'com.facebook.android:facebook-android-sdk:4.0.1'
+    compile project(':app')
+    compile project(':samples:HelloFacebookSample')
+    compile project(':samples:MessengerSendSample')
+    compile project(':samples:RPSSample')
+    compile project(':samples:Scrumptious')
+    compile project(':samples:SwitchUserSample')
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1.1'
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 21
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+}
