@@ -1,10 +1,9 @@
 package com.example.parvez.friendstrivia;
-
-
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -70,18 +71,39 @@ public class question extends ActionBarActivity {
             }
         };
 
-        if (ImageAdapter.character == 1) {
+
+        if (ImageAdapter.character != -1) {
             final ArrayList<Integer> number = new ArrayList<Integer>();
-            for (int i = 0; i < 15; ++i)
-                number.add(i);
+            if (ImageAdapter.character == 1) {
+                for (int i = 0; i < 15; ++i)
+                    number.add(i);
+            }
+            else if (ImageAdapter.character == 2) {
+                for (int i = 15; i < 30; ++i)
+                    number.add(i);
+            }
+            else if (ImageAdapter.character == 3) {
+                for (int i = 30; i < 45; ++i)
+                    number.add(i);
+            }
+            else if (ImageAdapter.character == 4) {
+                for (int i = 45; i < 60; ++i)
+                    number.add(i);
+            }
+
+            else if (ImageAdapter.character == 5) {
+                for (int i = 60; i < 75; ++i)
+                    number.add(i);
+            }
+            else if (ImageAdapter.character == 6) {
+                for (int i = 75; i < 90; ++i)
+                    number.add(i);
+            }
+
+
             Collections.shuffle(number);
             flag = number.get(0);
-
-
             bar.setProgress(0);
-
-
-
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
@@ -122,7 +144,11 @@ public class question extends ActionBarActivity {
                         marks = correct;
 
                         Intent myIntent = new Intent(question.this, Result.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         question.this.startActivity(myIntent);
+
 
                     }
 
@@ -150,15 +176,39 @@ public class question extends ActionBarActivity {
                 op4 = new String[questionsList.size()];
                 ans = new String[questionsList.size()];
 
-                for (int i = 0; i < 15; i++) {
-                    questions[i] = questionsList.get(i);
-                    ques[i] = questions[i].getQues();
-                    op1[i] = questions[i].getOp1();
-                    op2[i] = questions[i].getOp2();
-                    op3[i] = questions[i].getOp3();
-                    op4[i] = questions[i].getOp4();
-                    ans[i] = questions[i].getAns();
+
+                if (ImageAdapter.character == 1) {
+                    for (int i = 0; i < 15; i++) {
+                        setquestion(i,questions);
+                    }
                 }
+                else if (ImageAdapter.character == 2) {
+                    for (int i = 15; i < 30; i++) {
+                        setquestion(i,questions);
+                    }
+                }
+                else if (ImageAdapter.character == 3) {
+                    for (int i = 30; i < 45; i++) {
+                        setquestion(i,questions);
+                    }
+                }
+                else if (ImageAdapter.character == 4) {
+                    for (int i = 45; i < 60; i++) {
+                        setquestion(i,questions);
+                    }
+                }
+
+                else if (ImageAdapter.character == 5) {
+                    for (int i = 60; i < 75; i++) {
+                        setquestion(i,questions);
+                    }
+                }
+                else if (ImageAdapter.character == 6) {
+                    for (int i = 75; i < 90; i++) {
+                        setquestion(i,questions);
+                    }
+                }
+
                 count =  9;
                 timer.start();
                 total =0;
@@ -179,119 +229,17 @@ public class question extends ActionBarActivity {
 
         }
 
-        else if (ImageAdapter.character==2){
-
-            final ArrayList<Integer> number = new ArrayList<Integer>();
-            for (int i = 15; i <30 ; ++i)
-                number.add(i);
-            Collections.shuffle(number);
-            flag = number.get(0);
-
-
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    RadioButton uans = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
-                    String ansText = "";
-                    if (uans != null) {
-                        ansText = uans.getText().toString();
-                    }
-
-                    if (ansText.equalsIgnoreCase(ans[flag])) {
-                        correct++;
-                    } else {
-                        wrong++;
-                    }
-                    flag++;
-
-
-                    if (i < count) {
-                        i++;
-                        total = total+10;
-                        bar.setProgress(total);
-                        timer.start();
-                        flag = number.get(i);
-                        rg.clearCheck();
-                        view.setText(qno + "." + ques[flag]);
-                        rb1.setText(op1[flag]);
-                        rb2.setText(op2[flag]);
-                        rb3.setText(op3[flag]);
-                        rb4.setText(op4[flag]);
-                        qno++;
-
-
-                    } else {
-
-                        marks = correct;
-
-                        Intent myIntent = new Intent(question.this, Result.class);
-                        question.this.startActivity(myIntent);
-
-                    }
-
-                }
-            };
-            MyDatabaseHelper db = new MyDatabaseHelper(context);
-
-            try {
-                db.createDataBase();
-                db.openDataBase();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            DataSource ds = new DataSource(context);
-            try {
-
-                ds.open();
-                questionsList = ds.getAllQuestions();
-                Questions[] questions = new Questions[questionsList.size()];
-                ques = new String[questionsList.size()];
-                op1 = new String[questionsList.size()];
-                op2 = new String[questionsList.size()];
-                op3 = new String[questionsList.size()];
-                op4 = new String[questionsList.size()];
-                ans = new String[questionsList.size()];
-
-                for (int i = 15; i < 30; i++) {
-                    questions[i] = questionsList.get(i);
-                    ques[i] = questions[i].getQues();
-                    op1[i] = questions[i].getOp1();
-                    op2[i] = questions[i].getOp2();
-                    op3[i] = questions[i].getOp3();
-                    op4[i] = questions[i].getOp4();
-                    ans[i] = questions[i].getAns();
-                }
-                count = 9;
-                timer.start();
-                total =0;
-                bar.setProgress(total);
-                view.setText(qno + "." + ques[flag]);
-                rb1.setText(op1[flag]);
-                rb2.setText(op2[flag]);
-                rb3.setText(op3[flag]);
-                rb4.setText(op4[flag]);
-                qno++;
-                button.setOnClickListener(listener);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            ds.close();
-            db.close();
-
-        }
-
-
     }
 
-
-
-
-
-
-
+    private void setquestion(int i,Questions[] questions) {
+        questions[i] = questionsList.get(i);
+        ques[i] = questions[i].getQues();
+        op1[i] = questions[i].getOp1();
+        op2[i] = questions[i].getOp2();
+        op3[i] = questions[i].getOp3();
+        op4[i] = questions[i].getOp4();
+        ans[i] = questions[i].getAns();
+    }
 
 
     @Override
@@ -321,6 +269,26 @@ public class question extends ActionBarActivity {
         // TODO Auto-generated method stub
         super.onPause();
         logoMusic.release();
+    }
+
+    private Boolean exit = false;
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            finish(); // finish activity
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+
+        }
 
     }
+
 }

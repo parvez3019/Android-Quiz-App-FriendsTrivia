@@ -47,7 +47,11 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Intent myIntent = new Intent(MainActivity.this, question.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 MainActivity.this.startActivity(myIntent);
+
 
             }
 
