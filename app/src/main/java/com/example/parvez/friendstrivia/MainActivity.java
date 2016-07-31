@@ -2,30 +2,20 @@ package com.example.parvez.friendstrivia;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.support.v4.view.GestureDetectorCompat;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
-
-    MediaPlayer logoMusic;
-    static Button button;
-
-
-
-    public static void next (){
-        button.performClick();
-
-    }
+    private MediaPlayer logoMusic;
+    private static Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,30 +24,25 @@ public class MainActivity extends ActionBarActivity {
         button = (Button)findViewById(R.id.button);
         logoMusic = MediaPlayer.create(this,R.raw.toggle);
         logoMusic.start();
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         ImageAdapter adapter = new ImageAdapter(this);
         viewPager.setAdapter(adapter);
-
-
         button.setVisibility( View.GONE);
         button.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                Intent myIntent = new Intent(MainActivity.this, question.class);
+                Intent myIntent = new Intent(MainActivity.this, Question_Activity.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 MainActivity.this.startActivity(myIntent);
-
-
             }
-
         });
+    }
 
-
+    public static void next (){
+        button.performClick();
     }
 
     @Override
@@ -67,7 +52,6 @@ public class MainActivity extends ActionBarActivity {
         logoMusic.release();
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,7 +71,24 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private Boolean exit = false;
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            finish(); // finish activity
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
     }
 }

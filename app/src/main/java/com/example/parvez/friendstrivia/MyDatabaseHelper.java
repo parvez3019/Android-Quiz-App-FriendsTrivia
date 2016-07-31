@@ -15,12 +15,9 @@ import java.io.OutputStream;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
-    private static String DB_PATH = "/data/data/com.example.parvez.friendstrivia/databases/";
-
+    private static String DB_PATH = "/data/data/com.parvezdev.friendstrivia/databases/";
     private static String DB_NAME = "data_1";
-
     private SQLiteDatabase myDataBase;
-
     private final Context myContext;
 
     /**
@@ -29,7 +26,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
      * @param context
      */
     public MyDatabaseHelper(Context context) {
-
         super(context, DB_NAME, null, 1);
         this.myContext = context;
     }
@@ -38,38 +34,24 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
      * Creates a empty database on the system and rewrites it with your own database.
      * */
     public void createDataBase() throws IOException {
-
         boolean dbExist = checkDataBase();
-
         if(dbExist){
             //do nothing - database already exist
             try {
-
                 copyDataBase();
-
             } catch (IOException e) {
-
                 throw new Error("Error copying database");
-
             }
-
         }else{
-
             //By calling this method and empty database will be created into the default system path
             //of your application so we are gonna be able to overwrite that database with our database.
             this.getReadableDatabase();
-
             try {
-
                 copyDataBase();
-
             } catch (IOException e) {
-
                 throw new Error("Error copying database");
-
             }
         }
-
     }
 
     /**
@@ -77,26 +59,17 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
      * @return true if it exists, false if it doesn't
      */
     private boolean checkDataBase(){
-
         SQLiteDatabase checkDB = null;
-
         try{
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
             Log.d("DB CHECK",myPath);
-
         }catch(SQLiteException e){
-
             //database does't exist yet.
-
         }
-
         if(checkDB != null){
-
             checkDB.close();
-
         }
-
         return checkDB != null ? true : false;
     }
 
@@ -106,73 +79,50 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
      * This is done by transfering bytestream.
      * */
     private void copyDataBase() throws IOException {
-
         //Open your local db as the input stream
         InputStream myInput = myContext.getAssets().open(DB_NAME);
-
         // Path to the just created empty db
         String outFileName = DB_PATH + DB_NAME;
-
         //Open the empty db as the output stream
         OutputStream myOutput = new FileOutputStream(outFileName);
-
         //transfer bytes from the inputfile to the outputfile
         byte[] buffer = new byte[1024];
         int length;
         while ((length = myInput.read(buffer))>0){
             myOutput.write(buffer, 0, length);
         }
-
         //Close the streams
         myOutput.flush();
         myOutput.close();
         myInput.close();
-
     }
 
     public void openDataBase()  {
-
         //Open the database
         String myPath = DB_PATH + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
-
     }
 
     @Override
     public synchronized void close() {
-
         if(myDataBase != null)
             myDataBase.close();
-
         super.close();
-
     }
-
-
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.
-
-
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(newVersion>oldVersion)
             try {
-
                 copyDataBase();
-
             } catch (IOException e) {
-
                 throw new Error("Error copying database");
-
             }
     }
 }

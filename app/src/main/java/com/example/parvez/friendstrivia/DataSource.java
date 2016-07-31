@@ -13,10 +13,8 @@ public class DataSource {
     private SQLiteDatabase database;
     private  MyDatabaseHelper dbHelper;
     private String[] allColumns={"_id","question","option_1","option_2","option_3","option_4","answer"};
-
-
-    public DataSource(Context context)
-    {
+    
+    public DataSource(Context context){
         dbHelper=new MyDatabaseHelper(context);
     }
     public void open() throws SQLException {
@@ -26,26 +24,20 @@ public class DataSource {
         dbHelper.close();
     }
 
-
+    // Get list of questions 
     public List<Questions> getAllQuestions() {
         List<Questions> questionsList = new ArrayList<Questions>();
-
-
         Cursor cursor = database.query("questions",
                 allColumns,null,null, null, null, null);
-
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Questions questions = cursorToQuestion(cursor);
             questionsList.add(questions);
             cursor.moveToNext();
-
         }
-        // make sure to close the cursor
         cursor.close();
         return questionsList;
     }
-
    private Questions cursorToQuestion(Cursor cursor) {
         Questions questions = new Questions();
         questions.setQues(cursor.getString(1));
@@ -54,7 +46,6 @@ public class DataSource {
         questions.setOp3(cursor.getString(4));
         questions.setOp4(cursor.getString(5));
         questions.setAns(cursor.getString(6));
-        //Log.d("1st"+cursor.getString(0),"2nd"+cursor.getString(2));
         return questions;
     }
 }
